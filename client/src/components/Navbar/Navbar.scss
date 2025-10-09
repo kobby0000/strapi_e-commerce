@@ -5,6 +5,12 @@
         display: flex;
         align-items: center;
         font-size: 14px;
+
+        &a:hover,
+        &a:focus {
+            color: var(--blue_color);
+            transform: scaleX(1.1);
+        }
     }
 
     .wrapper {
@@ -49,6 +55,10 @@
                 gap: 10px;
                 font-size: 20px;
                 cursor: pointer;
+
+                .login {
+                    font-size: 14px;
+                }
 
                 .cart_icon {
                     position: relative;

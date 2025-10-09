@@ -1,5 +1,4 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { StrictMode,useState } from 'react'
 import './index.css'
 import { 
   createBrowserRouter, 
@@ -7,13 +6,21 @@ import {
   RouterProvider
 } from 'react-router-dom'
 
-  import { Home, Product, Products} from './pages/index.js';
-  import { Navbar,Footer } from './components/index.js';
+  import { Home, Product, Products, PasswordReset} from './pages/index.js';
+  import { Navbar,Footer, Login, } from './components/index.js';
+  import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
   const Layout =() => {
+  const [ showLogin, setShowLogin ] = useState(false);
+
     return(
       <>
-      <Navbar />
+      <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+      "{showLogin ? <Login setShowLogin={setShowLogin}/> : <></>}
+      <Navbar
+       setShowLogin={setShowLogin}
+        />
       <Outlet />
       <Footer />
       </>
@@ -37,6 +44,15 @@ import {
       path:"/product/:id",
     element:<Product/>
   },
+  //  {
+  //     path:"Login",
+  //   element:<Login/>
+  // },
+   {
+      path:"/password-reset",
+    element:<PasswordReset/>
+  },
+  
     ]
   },
    
