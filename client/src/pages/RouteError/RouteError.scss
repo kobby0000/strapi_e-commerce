@@ -1,0 +1,59 @@
+.route_error {
+  min-height: calc(100vh - 160px);
+  display: grid;
+  place-items: center;
+  padding: 48px 20px;
+  background: #f5f7fb;
+
+  section {
+    width: min(560px, 100%);
+    padding: 38px;
+    background: #fff;
+    border: 1px solid #e1e7f0;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  span {
+    display: inline-grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 18px;
+    border-radius: 50%;
+    background: #0f172a;
+    color: #fff;
+    font-weight: 800;
+  }
+
+  h1 {
+    margin-bottom: 12px;
+    color: #111827;
+    font-size: 30px;
+  }
+
+  p {
+    margin: 0 auto 24px;
+    max-width: 420px;
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  .route_error_actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+
+    a {
+      padding: 12px 16px;
+      border-radius: 6px;
+      background: #0f766e;
+      color: #fff;
+
+      &:last-child {
+        background: #111827;
+      }
+    }
+  }
+}

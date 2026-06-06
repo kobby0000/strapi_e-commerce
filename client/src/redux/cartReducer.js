@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
-const API_URL = import.meta.env.VITE_APP_API_URL || "http://localhost:1337";
+import { API_URL } from "../config/env";
 
 const initialState = {
   products: [],
-  cartId: null, // track user's cart id from Strapi
+  cartId: null,
 };
 
 export const cartSlice = createSlice({
@@ -51,62 +50,28 @@ const getAuthHeaders = () => {
     : {};
 };
 
-// --- Async: Sync Cart with Strapi ---
 export const syncCartWithBackend = () => async (dispatch, getState) => {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  const { products, cartId } = getState().cart;
-  const total = products.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const productIds = products.map((p) => p.id);
-const data = { products: productIds, total };
-  console.log("Syncing cart with data:", { products, total });
+  const { products } = getState().cart;
+  const items = products.map((p) => ({ id: p.id, quantity: p.quantity }));
 
   try {
-    let res;
-
-    if (cartId) {
-      // Update existing cart
-      res = await axios.put(
-        `${API_URL}/api/carts/${cartId}`,
-        { data },
-        getAuthHeaders()
-      );
-    } else {
-      // Create new cart
-      res = await axios.post(`${API_URL}/api/carts`, { data }, getAuthHeaders());
-    }
-
-    // Store the new cart ID if it was just created
-    if (res.data?.data?.id) {
-      dispatch(
-        setCart({
-          id: res.data.data.id,
-          items: res.data.data.attributes?.items || products,
-        })
-      );
-    }
+    const res = await axios.put(`${API_URL}/cart`, { items }, getAuthHeaders());
+    dispatch(setCart({ id: res.data.data?.id, items: res.data.data?.items || products }));
   } catch (err) {
     console.error("Error syncing cart:", err);
   }
 };
 
-// --- Async: Fetch User Cart from Strapi ---
 export const fetchUserCart = () => async (dispatch) => {
   const token = localStorage.getItem("token");
   if (!token) return;
 
   try {
-    const res = await axios.get(`${API_URL}/api/carts`, getAuthHeaders());
-    const cart = res.data?.data?.[0]; // assuming 1 cart per user
-    if (cart) {
-      dispatch(
-        setCart({
-          id: cart.id,
-          items: cart.attributes?.items || [],
-        })
-      );
-    }
+    const res = await axios.get(`${API_URL}/cart`, getAuthHeaders());
+    dispatch(setCart({ id: res.data.data?.id, items: res.data.data?.items || [] }));
   } catch (err) {
     console.error("Error fetching cart:", err);
   }

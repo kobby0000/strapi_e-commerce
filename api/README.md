@@ -1,61 +1,33 @@
-# 🚀 Getting started with Strapi
+# CircuitCart API
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+Express, MongoDB and Node.js backend for the electronics storefront.
 
-### `develop`
+## Setup
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+1. Copy `.env.example` to `.env`.
+2. Set `MONGO_URI`, `JWT_SECRET`, `ADMIN_INVITE_CODE`, email URLs, and optionally Google/SMTP values.
+3. Install dependencies with `npm install`.
+4. Seed demo electronics products with `npm run seed`.
+5. Start the API with `npm run dev`.
 
-```
-npm run develop
-# or
-yarn develop
-```
+Development ports are fixed for consistency:
 
-### `start`
+- API: `http://localhost:5050`
+- Client: `http://localhost:5174`
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+Uploaded product and profile images are stored under `api/uploads` and served from `/uploads/...`.
 
-```
-npm run start
-# or
-yarn start
-```
+## Main Routes
 
-### `build`
-
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
-```
-
-## ⚙️ Deployment
-
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
-
-```
-yarn strapi deploy
-```
-
-## 📚 Learn more
-
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
-
----
-
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+- `POST /api/auth/register` - customer registration
+- `POST /api/auth/login` - customer/admin login
+- `POST /api/auth/google` - verifies a Google ID token and issues an app JWT
+- `POST /api/auth/admin/register` - admin registration with invite code
+- `POST /api/auth/verify-email/:token` - verify a new user's email
+- `POST /api/auth/resend-verification` - generate another verification link
+- `POST /api/auth/forgot-password` - generate a password reset token
+- `POST /api/auth/reset-password/:token` - reset password with backend token validation
+- `GET /api/products` - list products with `category`, `type`, `subCategory`, `maxPrice`, `sort`
+- `GET /api/products/categories` - category filter metadata
+- `GET /api/admin/dashboard` - protected admin metrics
+- `GET /api/cart` and `PUT /api/cart` - protected customer cart

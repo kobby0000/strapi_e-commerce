@@ -6,12 +6,13 @@ import useFetch from "../../hooks/hookFetch";
 
 
 const Products = () => {
-  const catId = parseInt(useParams().id);
+  const category = useParams().id;
   const [maxPrice, setMaxPrice] = useState(0);
   const [sort, setSort] = useState(null);
   const [selectSubCats, setSelectSubCats] = useState([]);
 
-  const { data, loading, error } = useFetch(`/sub-categories?filters[categories][id][$eq]=${catId}`)
+  const { data, loading, error } = useFetch(`/products/categories`)
+  const currentCategory = data?.data?.find((item) => item.id === category);
   const handleChange = (e) => {
     const value = e.target.value;
     const isChecked = e.target.checked;
@@ -31,12 +32,16 @@ const Products = () => {
     <div className='products'>
       <div className="left">
         <div className="filter_item">
-          <h2>Product Cartegories</h2>
-          {Array.isArray(data?.data) && data.data.length > 0 ? (
-            data.data.map((item) => (
-              <div className="input_item" key={item.id}>
-                <input type="checkbox" id={item.id} value={item.id} onChange={handleChange} />
-                <label htmlFor={item.id}>{item.title}</label>
+          <h2>Product Categories</h2>
+          {loading ? (
+            <p>Loading filters...</p>
+          ) : error ? (
+            <p>Could not load filters.</p>
+          ) : currentCategory?.subCategories?.length > 0 ? (
+            currentCategory.subCategories.map((item) => (
+              <div className="input_item" key={item}>
+                <input type="checkbox" id={item} value={item} onChange={handleChange} />
+                <label htmlFor={item}>{item}</label>
               </div>
             ))
           ) : (
@@ -52,7 +57,7 @@ const Products = () => {
               <input type="range"
                 min={0}
                 value={maxPrice}
-                max={1000}
+                max={2000}
                 onChange={(e) => setMaxPrice(e.target.value)} />
               <span>
                 {maxPrice}
@@ -64,18 +69,18 @@ const Products = () => {
           <h2>Sort by</h2>
           <div className="input_item">
             <input type="radio" id="des" name='price' onChange={e => setSort("asc")} />
-            <label htmlFor="des">Price (Lowest first)</label>
+            <label htmlFor="asc">Price (Lowest first)</label>
           </div>
           <div className="input_item">
-            <input type="radio" id="des" name='price' onChange={e => setSort("desc")} />
-            <label htmlFor="des">Price (Highests first)</label>
+            <input type="radio" id="desc" name='price' onChange={e => setSort("desc")} />
+            <label htmlFor="desc">Price (Highest first)</label>
           </div>
         </div>
 
       </div>
       <div className="right">
-        <img className='cart_image' src="/drug2.webp" alt="" />
-        <List catId={catId} maxPrice={maxPrice} sort={sort} subCats={selectSubCats} />
+        <img className='cart_image' src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=1200&q=80" alt="Electronics display" />
+        <List category={category} maxPrice={maxPrice} sort={sort} subCats={selectSubCats} />
       </div>
     </div>
   )

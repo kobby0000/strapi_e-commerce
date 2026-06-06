@@ -10,10 +10,10 @@ const Contact = () => {
   return (
     <div className='contact'>
         <div className="wrapper">
-            <span> LET'S GET IN TOUCH</span>
+            <span> GET DEAL ALERTS</span>
             <div className="mail">
-                <input type="text" placeholder='Enter Your Email' />
-                <button>JOIN US</button>
+                <input type="email" placeholder='Enter Your Email' />
+                <button>SUBSCRIBE</button>
             </div>
             <div className="icons">
                 <a href="http://" target="_blank" rel="noopener noreferrer"><FaFacebookSquare /></a>

@@ -1,0 +1,41 @@
+.admin_products {
+  .admin_product_row {
+    display: grid;
+    grid-template-columns: 64px 1fr 100px 120px 90px;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 0;
+    border-top: 1px solid #edf1f6;
+
+    img {
+      width: 64px;
+      height: 48px;
+      border-radius: 6px;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      span {
+        color: #64748b;
+      }
+    }
+
+    button {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 0;
+      padding: 9px 12px;
+    }
+  }
+}
+
+@media (max-width: 760px) {
+  .admin_products {
+    .admin_product_row {
+      grid-template-columns: 52px 1fr;
+    }
+  }
+}

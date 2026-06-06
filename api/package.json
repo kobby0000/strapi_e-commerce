@@ -1,39 +1,35 @@
 {
-  "name": "api",
-  "version": "0.1.0",
+  "name": "electronics-shop-api",
+  "version": "1.0.0",
   "private": true,
-  "description": "A Strapi application",
+  "description": "Express, MongoDB and Node.js API for an electronics shopping platform",
+  "main": "src/server.js",
   "scripts": {
-    "build": "strapi build",
-    "console": "strapi console",
-    "deploy": "strapi deploy",
-    "dev": "strapi develop",
-    "develop": "strapi develop",
-    "seed:example": "node ./scripts/seed.js",
-    "start": "strapi start",
-    "strapi": "strapi",
-    "upgrade": "npx @strapi/upgrade latest",
-    "upgrade:dry": "npx @strapi/upgrade latest --dry"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "seed": "node scripts/seed.js"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "5.23.5",
-    "@strapi/plugin-users-permissions": "5.23.5",
-    "@strapi/provider-email-sendgrid": "^5.26.0",
-    "@strapi/strapi": "5.23.5",
-    "better-sqlite3": "11.3.0",
-    "fs-extra": "^10.0.0",
-    "mime-types": "^2.1.27",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^6.0.0",
-    "styled-components": "^6.0.0"
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "google-auth-library": "^10.7.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "morgan": "^1.10.0",
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.10",
+    "slugify": "^1.6.6",
+    "validator": "^13.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   },
   "engines": {
-    "node": ">=18.0.0 <=22.x.x",
-    "npm": ">=6.0.0"
-  },
-  "strapi": {
-    "uuid": "a061793d-1adb-4868-99a9-1d1283063d11",
-    "installId": "fdad4c3ca2e9671d5257e48e555c82f54e8adab239b9755c6830caa26fa64757"
+    "node": ">=18.0.0"
   }
 }

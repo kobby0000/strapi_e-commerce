@@ -7,6 +7,7 @@ import useFetch from "../../hooks/hookFetch";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/cartReducer";
+import { resolveAssetUrl } from "../../config/env";
 
 const Product = () => {
   const { id } = useParams();
@@ -14,17 +15,20 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
 
-  const { data, loading, error } = useFetch(
-    `/products?filters[id][$eq]=${id}&populate=*`
-  );
+  const { data, loading, error } = useFetch(`/products/${id}`);
 
-  const baseUrl = import.meta.env.VITE_APP_UPLOAD_URL;
-
-  const product = data?.data?.[0]; // no .attributes since Strapi returned fields directly
+  const product = data?.data;
+  const getImageUrl = (image) => {
+    if (!image) return "/placeholder.png";
+    if (typeof image === "string") return resolveAssetUrl(image);
+    return image.url ? resolveAssetUrl(image.url) : "/placeholder.png";
+  };
 
   return (
     <div className="product">
-      {loading ? (
+      {error ? (
+        "Could not load this product."
+      ) : loading ? (
         "Loading..."
       ) : (
         <>
@@ -33,9 +37,7 @@ const Product = () => {
               {/* First Image */}
               <img
                 src={
-                  product?.img?.url
-                    ? baseUrl + product.img.url
-                    : "/placeholder.png"
+                  getImageUrl(product?.img)
                 }
                 alt={product?.title}
                 onClick={() => setSelectedImage("img")}
@@ -44,9 +46,7 @@ const Product = () => {
               {/* Second Image */}
               <img
                 src={
-                  product?.img2?.url
-                    ? baseUrl + product.img2.url
-                    : "/placeholder.png"
+                  getImageUrl(product?.img2)
                 }
                 alt={product?.title}
                 onClick={() => setSelectedImage("img2")}
@@ -58,12 +58,8 @@ const Product = () => {
               <img
                 src={
                   selectedImage === "img2"
-                    ? product?.img2?.url
-                      ? baseUrl + product.img2.url
-                      : "/placeholder.png"
-                    : product?.img?.url
-                    ? baseUrl + product.img.url
-                    : "/placeholder.png"
+                    ? getImageUrl(product?.img2)
+                    : getImageUrl(product?.img)
                 }
                 alt={product?.title}
               />
@@ -88,11 +84,11 @@ const Product = () => {
             </div>
 
             <button className="add" onClick={() => {dispatch(addToCart({
-              id: product.id,
+              id: product.id || product._id,
               title: product.title,
               desc: product.desc, 
               price: product.price,
-              img: product?.img?.url ? baseUrl + product.img.url : "/placeholder.png",
+              img: getImageUrl(product?.img),
               quantity,
             }))}}>
               <MdAddShoppingCart className="icon" /> ADD TO CART
@@ -108,9 +104,9 @@ const Product = () => {
             </div>
 
             <div className="info">
-              <span>Vendor: Polo</span>
+              <span>Brand: {product?.brand}</span>
               <span>Product: {product?.title}</span>
-              <span>Tag: {product?.type}</span>
+              <span>Category: {product?.category}</span>
             </div>
           </div>
         </>

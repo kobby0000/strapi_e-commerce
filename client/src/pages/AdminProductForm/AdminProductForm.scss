@@ -1,0 +1,118 @@
+.admin_product_form {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    border: 1px solid #cfd8e3;
+    border-radius: 6px;
+    padding: 13px 14px;
+    font-size: 14px;
+  }
+
+  textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+
+  .admin_form_grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .admin_checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    input {
+      width: auto;
+    }
+  }
+
+  .admin_file_input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 700;
+
+    span {
+      color: #0f766e;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  }
+
+  .admin_specs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .admin_specs_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    span {
+      color: #344054;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    button {
+      padding: 9px 12px;
+      background: #101828;
+      color: #fff;
+      border: 0;
+    }
+  }
+
+  .admin_spec_row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 90px;
+    gap: 10px;
+    align-items: center;
+
+    button {
+      height: 42px;
+      border: 0;
+      background: #fee2e2;
+      color: #b91c1c;
+
+      &:disabled {
+        opacity: .45;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  button {
+    width: fit-content;
+    padding: 13px 18px;
+    background: #0f766e;
+    color: #fff;
+    border: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin_product_form {
+    .admin_form_grid {
+      grid-template-columns: 1fr;
+    }
+
+    .admin_spec_row {
+      grid-template-columns: 1fr;
+    }
+  }
+}

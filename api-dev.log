@@ -1,0 +1,7 @@
+
+> electronics-shop-api@1.0.0 start
+> node src/server.js
+
+MongoDB connected
+API running on port 5050
+[0mGET /api/health [32m200[0m 37.892 ms - 48[0m

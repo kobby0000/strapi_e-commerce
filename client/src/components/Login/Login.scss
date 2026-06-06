@@ -30,9 +30,12 @@
             cursor: pointer;
         }
 
-        p {
+        button {
             font-size: 15px;
             cursor: pointer;
+            border: none;
+            color: #000;
+            background: transparent;
         }
     }
 
@@ -93,5 +96,17 @@
             opacity: .7;
     }
 }
+
+    .login_google {
+        display: flex;
+        justify-content: center;
+    }
+
+    .login_verify_link {
+        color: #0f766e;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: underline;
+    }
 }
 

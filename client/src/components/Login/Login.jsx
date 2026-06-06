@@ -1,12 +1,16 @@
 import { useState } from "react";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
+import { GOOGLE_CLIENT_ID } from "../../config/env";
+import { makeRequest } from "../../makeRequest";
 import "./Login.scss";
 
 const Login = ({ setShowLogin }) => {
   const [mode, setMode] = useState("Login");
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "" });
   const [loading, setLoading] = useState(false);
+  const [verificationUrl, setVerificationUrl] = useState("");
 
   const onChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -16,49 +20,39 @@ const Login = ({ setShowLogin }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const base =
-        (import.meta.env.VITE_APP_API_URL ||
-          import.meta.env.VITE_API_URL ||
-          "http://localhost:1337").replace(/\/$/, "");
-
-      let url, payload;
+      let endpoint, payload;
 
       if (mode === "Login") {
-        url = `${base}/auth/local`;
-        payload = { identifier: form.email, password: form.password };
+        endpoint = "/auth/login";
+        payload = { email: form.email, password: form.password };
       } else {
-        url = `${base}/auth/local/register`;
+        endpoint = "/auth/register";
         payload = {
-          username: form.name || form.email,
+          name: form.name || form.email,
           email: form.email,
           password: form.password,
+          confirmPassword: form.confirmPassword,
         };
       }
 
-      const res = await axios.post(url, payload, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await makeRequest.post(endpoint, payload);
 
-      console.log("Auth response:", res.data);
-
-      if (res.data.jwt) {
-        localStorage.setItem("token", res.data.jwt);
-        toast.success("Login successful!");
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        toast.success(mode === "Login" ? "Login successful!" : "Account created!");
         window.dispatchEvent(new Event("storage"));
         setShowLogin(false);
-      } else if (mode === "Sign Up") {
-        toast.info("Account created. Please check your email to confirm before logging in.");
-        setMode("Login");
+      } else if (res.data.message) {
+        toast.success(res.data.message);
+        setVerificationUrl(res.data.verificationUrl || "");
       } else {
-        toast.warn("Login succeeded but no token returned (unexpected). Check Strapi settings.");
+        toast.warn("Authentication succeeded but no token was returned.");
       }
     } catch (err) {
       console.error("Auth error:", err.response || err.message);
       const message =
-        err?.response?.data?.error?.message ||
         err?.response?.data?.message ||
-        err?.response?.data?.error ||
-        (err?.response?.data && JSON.stringify(err.response.data)) ||
         err.message ||
         "Unknown error";
       toast.error("Error: " + message);
@@ -67,12 +61,27 @@ const Login = ({ setShowLogin }) => {
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const res = await makeRequest.post("/auth/google", {
+        credential: credentialResponse.credential,
+      });
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      window.dispatchEvent(new Event("storage"));
+      toast.success("Google login successful!");
+      setShowLogin(false);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Google login failed");
+    }
+  };
+
   return (
     <div className="login_popup">
       <form onSubmit={handleSubmit} className="login_popup_container">
         <div className="login_popup_title">
           <h2>{mode}</h2>
-          <p onClick={() => setShowLogin(false)}>X</p>
+          <button type="button" onClick={() => setShowLogin(false)}>X</button>
         </div>
 
         <div className="login_popup_inputs">
@@ -82,7 +91,7 @@ const Login = ({ setShowLogin }) => {
               value={form.name}
               onChange={onChange}
               type="text"
-              placeholder="Your Name"
+            placeholder="Your Name"
               required
             />
           )}
@@ -103,6 +112,16 @@ const Login = ({ setShowLogin }) => {
             placeholder="Password"
             required
           />
+          {mode === "Sign Up" && (
+            <input
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={onChange}
+              type="password"
+              placeholder="Confirm Password"
+              required
+            />
+          )}
         </div>
 
         <button type="submit" className="login_popup_button" disabled={loading}>
@@ -113,19 +132,38 @@ const Login = ({ setShowLogin }) => {
             : "Login"}
         </button>
 
+        {GOOGLE_CLIENT_ID && mode === "Login" && (
+          <div className="login_google">
+            <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => toast.error("Google login failed")} />
+          </div>
+        )}
+
+        {verificationUrl && (
+          <Link className="login_verify_link" to={new URL(verificationUrl).pathname + new URL(verificationUrl).search} onClick={() => setShowLogin(false)}>
+            Open development verification link
+          </Link>
+        )}
+
         <div className="login_popup_condition">
           <input type="checkbox" required />
           <p>By continuing, I agree to the terms of use & privacy policy</p>
         </div>
 
         {mode === "Login" ? (
-          <p>
-            Create a new account?{" "}
-            <span onClick={() => setMode("Sign Up")} className="login_change">
-              Register
-            </span>
-            !
-          </p>
+          <>
+            <p>
+              <Link to="/password-reset" onClick={() => setShowLogin(false)} className="login_change">
+                Forgot password?
+              </Link>
+            </p>
+            <p>
+              Create a new account?{" "}
+              <span onClick={() => setMode("Sign Up")} className="login_change">
+                Register
+              </span>
+              !
+            </p>
+          </>
         ) : (
           <p>
             Already have an account?{" "}

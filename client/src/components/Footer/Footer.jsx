@@ -7,35 +7,35 @@ const Footer = () => {
       <div className="top">
         <div className="item">
           <h1>Categories</h1>
-          <span>Women</span>
-          <span>Men</span>
-          <span>Shoes</span>
+          <span>Laptops</span>
+          <span>Phones</span>
+          <span>Audio</span>
           <span>Accessories</span>
-          <span>New Arrivals</span>
+          <span>Gaming</span>
         </div>
         <div className="item">
           <h1>Links</h1>
-          <span>Faq</span>
-          <span>Pages</span>
+          <span>FAQ</span>
+          <span>Warranty</span>
           <span>Stores</span>
-          <span>Cookies</span>
+          <span>Returns</span>
         </div>
         <div className="item">
           <h1>About</h1>
-          <span>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloribus distinctio numquam, eius accusamus voluptates nulla maxime quaerat?</span>
+          <span>CircuitCart is an online electronics shop for laptops, phones, gaming gear and everyday tech accessories.</span>
         </div>
         <div className="item">
           <h1>Contact</h1>
-          <span>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloribus distinctio numquam, eius accusamus voluptates nulla maxime quaerat?</span>
+          <span>Need help choosing a device? Our support team can help compare specs, availability and warranty options.</span>
         </div>
       </div>
       <div className="bottom">
         <div className="left">
-          <span className='logo'>SageCoby</span>
-          <span className='copyright'>&copy; {new Date().getFullYear()} SageCoby. All rights reserved.</span>
+          <span className='logo'>CircuitCart</span>
+          <span className='copyright'>&copy; {new Date().getFullYear()} CircuitCart. All rights reserved.</span>
         </div>
         <div className="right">
-          <img src="/public/payment.webp" alt="" />
+          <img src="/payment.webp" alt="" />
         </div>
       </div>
     </div>

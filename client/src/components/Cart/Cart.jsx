@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "./Cart.scss";
 import { MdDeleteForever } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,9 +7,12 @@ import { removeItem, resetCart, syncCartWithBackend } from "../../redux/cartRedu
 const Cart = () => {
   const products = useSelector((state) => state.cart.products);
   const dispatch = useDispatch();
+  const lastSynced = useRef("");
 
   useEffect(() => {
-    if (products.length >= 0) {
+    const snapshot = JSON.stringify(products.map((item) => ({ id: item.id, quantity: item.quantity })));
+    if (snapshot !== lastSynced.current) {
+      lastSynced.current = snapshot;
       dispatch(syncCartWithBackend());
     }
   }, [products, dispatch]);
