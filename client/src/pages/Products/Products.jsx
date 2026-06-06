@@ -68,11 +68,11 @@ const Products = () => {
         <div className="filter_item">
           <h2>Sort by</h2>
           <div className="input_item">
-            <input type="radio" id="des" name='price' onChange={e => setSort("asc")} />
+            <input type="radio" id="asc" name='price' onChange={() => setSort("asc")} />
             <label htmlFor="asc">Price (Lowest first)</label>
           </div>
           <div className="input_item">
-            <input type="radio" id="desc" name='price' onChange={e => setSort("desc")} />
+            <input type="radio" id="desc" name='price' onChange={() => setSort("desc")} />
             <label htmlFor="desc">Price (Highest first)</label>
           </div>
         </div>

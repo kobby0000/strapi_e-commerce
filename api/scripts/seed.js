@@ -108,6 +108,7 @@ const seed = async () => {
         email: process.env.SEED_ADMIN_EMAIL,
         password: process.env.SEED_ADMIN_PASSWORD,
         role: "admin",
+        emailVerified: true,
       });
     }
   }

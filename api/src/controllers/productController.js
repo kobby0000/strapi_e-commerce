@@ -2,6 +2,8 @@ const Product = require("../models/Product");
 const { fileUrl } = require("../middleware/uploadMiddleware");
 const asyncHandler = require("../utils/asyncHandler");
 
+const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const buildProductQuery = (query) => {
   const filter = {};
 
@@ -10,9 +12,10 @@ const buildProductQuery = (query) => {
   if (query.subCategory) filter.subCategory = { $in: String(query.subCategory).split(",") };
   if (query.maxPrice) filter.price = { $lte: Number(query.maxPrice) };
   if (query.search) {
+    const safeSearch = escapeRegex(String(query.search).slice(0, 100));
     filter.$or = [
-      { title: { $regex: query.search, $options: "i" } },
-      { brand: { $regex: query.search, $options: "i" } },
+      { title: { $regex: safeSearch, $options: "i" } },
+      { brand: { $regex: safeSearch, $options: "i" } },
     ];
   }
 

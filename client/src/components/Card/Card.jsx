@@ -38,7 +38,7 @@ const Card = ({ item }) => {
         </div>
         <h2>{item.title}</h2>
         <div className="prices">
-          <h3>${item.oldPrice || (Number(item.price) + 20).toFixed(2)}</h3>
+          {item.oldPrice && <h3>${item.oldPrice}</h3>}
           <h3>${item.price}</h3>
         </div>
       </Link>
