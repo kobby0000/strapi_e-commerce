@@ -9,13 +9,13 @@ const useFetch = (url) => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
+            setError(false);
             try {
                 const res = await makeRequest.get(url);
-                setData(res.data); // Store the whole response, not just res.data.data
+                setData(res.data);
             } catch (error) {
                 console.error("Fetch error:", error.response || error.message);
                 setError(true);
-                console.log("Fetching:", url);
             }
             setLoading(false);
         };
